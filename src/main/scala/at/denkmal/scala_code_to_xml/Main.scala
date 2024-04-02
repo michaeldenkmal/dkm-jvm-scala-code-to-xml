@@ -1,17 +1,22 @@
-import scala.meta._
-import org.dom4j.Document
-import org.dom4j.DocumentHelper
-import org.dom4j.Element
+package at.denkmal.scala_code_to_xml
+
+import org.dom4j.{Document, DocumentHelper, Element}
 import org.dom4j.io.{OutputFormat, XMLWriter}
 
 import java.io.FileWriter
 import java.nio.file.{Path, Paths}
+import scala.meta._
 
 object Main {
     def main(args: Array[String]): Unit = {
         // Read Scala source code from a file
-        val fp = "D:\\projekte\\oh\\oh_java_mv\\wa_oh\\src\\main\\scala\\at\\denkmal\\libohws\\ws\\GpRes.scala"
-        val source = scala.io.Source.fromFile(fp)
+        if (args.length!=2) {
+            println("scalaCodeToXml <code-file> <xml-file>")
+        }
+        val codeFile = args(0)
+        val xmlFile = args(1)
+        //val fp = "D:\\projekte\\oh\\oh_java_mv\\wa_oh\\src\\main\\scala\\at\\denkmal\\libohws\\ws\\GpRes.scala"
+        val source = scala.io.Source.fromFile(codeFile)
         val code = try source.mkString finally source.close()
 
         // Parse Scala code into an abstract syntax tree (AST)
@@ -47,9 +52,8 @@ object Main {
 
         // Print the XML representation of the AST
         //println(xmlAst.asXML())
-        val output = Paths.get(s"$fp.xml")
-        saveToXmlFile(xmlAst, output)
-        println(output)
+        //val output = Paths.get(s"$fp.xml")
+        saveToXmlFile(xmlAst, Paths.get(xmlFile))
     }
 
     def saveToXmlFile(xmlDoc: Document, outPath: Path): Unit = {
